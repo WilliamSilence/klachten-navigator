@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meldingsroute - Apostolisch Genootschap</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@400;600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-dark: #1a3a52;
+            --primary-mid: #2d5f7f;
+            --primary-light: #4a8db3;
+            --accent-warm: #d4af37;
+            --accent-green: #5c8a6a;
+            --accent-red: #a04848;
+            --bg-light: #f8f6f2;
+            --bg-white: #ffffff;
+            --text-dark: #2c3e50;
+            --text-mid: #546e7a;
+            --shadow: rgba(26, 58, 82, 0.12);
+            --shadow-strong: rgba(26, 58, 82, 0.25);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: linear-gradient(135deg, #f8f6f2 0%, #e8e4db 100%);
+            color: var(--text-dark);
+            min-height: 100vh;
+            padding: 2rem;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: var(--bg-white);
+            border-radius: 20px;
+            box-shadow: 0 10px 50px var(--shadow);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-mid) 100%);
+            padding: 3rem 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+
+        .header h1 {
+            font-family: 'Fraunces', serif;
+            color: white;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header p {
+            color: rgba(255,255,255,0.9);
+            font-size: 1.1rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .content {
+            padding: 3rem 2rem;
+        }
+
+        .intro {
+            background: linear-gradient(to right, #f0ede5, #faf8f4);
+            border-left: 5px solid var(--accent-warm);
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-bottom: 3rem;
+        }
+
+        .intro h2 {
+            font-family: 'Fraunces', serif;
+            color: var(--primary-dark);
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .intro p {
+            color: var(--text-mid);
+        }
+
+        .question-section {
+            margin-bottom: 2.5rem;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.6s ease forwards;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .question {
+            background: var(--primary-dark);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 15px var(--shadow);
+        }
+
+        .question h3 {
+            font-family: 'Fraunces', serif;
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .question p {
+            font-size: 0.95rem;
+            opacity: 0.95;
+        }
+
+        .options {
+            display: grid;
+            gap: 1rem;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        }
+
+        .option-btn {
+            background: white;
+            border: 2px solid var(--primary-light);
+            padding: 1.5rem;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: left;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .option-btn:hover {
+            border-color: var(--accent-warm);
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px var(--shadow);
+        }
+
+        .option-btn h4 {
+            font-family: 'Fraunces', serif;
+            color: var(--primary-dark);
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .option-btn p {
+            color: var(--text-mid);
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .result {
+            background: linear-gradient(135deg, #5c8a6a 0%, #4a7458 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 12px;
+            margin-top: 2rem;
+            box-shadow: 0 6px 25px var(--shadow-strong);
+            display: none;
+            animation: slideIn 0.5s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .result.show {
+            display: block;
+        }
+
+        .result h3 {
+            font-family: 'Fraunces', serif;
+            font-size: 1.6rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        .result .route-info {
+            background: rgba(255,255,255,0.15);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-top: 1.5rem;
+            border-left: 4px solid var(--accent-warm);
+        }
+
+        .result .route-info h4 {
+            font-weight: 600;
+            margin-bottom: 0.8rem;
+            font-size: 1.1rem;
+        }
+
+        .result .route-info p {
+            margin-bottom: 0.5rem;
+            line-height: 1.7;
+        }
+
+        .result .route-info strong {
+            color: var(--accent-warm);
+        }
+
+        .reset-btn {
+            background: white;
+            color: var(--primary-dark);
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            margin-top: 1.5rem;
+            transition: all 0.3s ease;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 1rem;
+        }
+
+        .reset-btn:hover {
+            background: var(--accent-warm);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .back-btn {
+            background: transparent;
+            color: var(--primary-mid);
+            border: 2px solid var(--primary-mid);
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            transition: all 0.3s ease;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.95rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .back-btn:hover {
+            background: var(--primary-mid);
+            color: white;
+            transform: translateX(-4px);
+            box-shadow: 0 4px 15px var(--shadow);
+        }
+
+        .back-btn::before {
+            content: '←';
+            font-size: 1.2rem;
+        }
+
+        .warning-box {
+            background: linear-gradient(135deg, #a04848 0%, #8a3838 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 12px;
+            margin-top: 2rem;
+            box-shadow: 0 6px 25px var(--shadow-strong);
+            display: none;
+        }
+
+        .warning-box.show {
+            display: block;
+            animation: slideIn 0.5s ease;
+        }
+
+        .warning-box h3 {
+            font-family: 'Fraunces', serif;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .footer {
+            background: var(--bg-light);
+            padding: 2rem;
+            text-align: center;
+            border-top: 1px solid #e0ddd5;
+        }
+
+        .footer p {
+            color: var(--text-mid);
+            font-size: 0.9rem;
+        }
+
+        .footer a {
+            color: var(--primary-mid);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .footer a:hover {
+            color: var(--accent-warm);
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .content {
+                padding: 2rem 1.5rem;
+            }
+
+            .options {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Meldingsroute Navigator</h1>
+            <p>Vind de juiste route voor uw melding of klacht</p>
+        </div>
+
+        <div class="content">
+            <div class="intro">
+                <h2>Welkom</h2>
+                <p>Deze navigator helpt u bij het vinden van de juiste procedure en contactpersoon voor uw melding of klacht binnen het Apostolisch Genootschap. Voor elke situatie is een duidelijke route beschikbaar. De klachtenprocedure is voor lidmaten en voormalig lidmaten identiek. Beantwoord de vragen hieronder om de juiste route te bepalen.</p>
+            </div>
+
+            <!-- Vraag 1: Wie bent u? -->
+            <div id="step1" class="question-section">
+                <div class="question">
+                    <h3>Vraag 1: Wie bent u?</h3>
+                    <p>Selecteer de categorie die op u van toepassing is:</p>
+                </div>
+                <div class="options">
+                    <button class="option-btn" onclick="selectRole('lidmaat')">
+                        <h4>Lidmaat of voormalig lidmaat</h4>
+                        <p>Gewoon lidmaat, jeugdlidmaat, aspirant-lidmaat, sympathisant of voormalig lid</p>
+                    </button>
+                    <button class="option-btn" onclick="selectRole('vertegenwoordiger')">
+                        <h4>Wettelijk vertegenwoordiger</h4>
+                        <p>Van een (voormalig) lidmaat of minderjarige deelnemer aan jeugdverzorging</p>
+                    </button>
+                    <button class="option-btn" onclick="selectRole('medewerker')">
+                        <h4>Medewerker</h4>
+                        <p>Werknemer, ZZP-er, voorganger, verzorger, vrijwilliger</p>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Vraag 2: Over wie gaat de melding? -->
+            <div id="step2" class="question-section hidden">
+                <button class="back-btn" onclick="goBack(2)">Ga terug</button>
+                <div class="question">
+                    <h3>Vraag 2: Over wie gaat uw melding of klacht?</h3>
+                    <p>Selecteer de persoon of groep waarover u een melding wilt doen:</p>
+                </div>
+                <div class="options" id="step2Options">
+                    <!-- Options worden dynamisch ingeladen -->
+                </div>
+            </div>
+
+            <!-- Vraag 3: Wat is de aard van de melding? -->
+            <div id="step3" class="question-section hidden">
+                <button class="back-btn" onclick="goBack(3)">Ga terug</button>
+                <div class="question">
+                    <h3>Vraag 3: Wat is de aard van uw melding?</h3>
+                    <p>Selecteer wat het beste bij uw situatie past:</p>
+                </div>
+                <div class="options" id="step3Options">
+                    <!-- Options worden dynamisch ingeladen -->
+                </div>
+            </div>
+
+            <!-- Resultaat -->
+            <div id="result" class="result">
+                <h3 id="resultTitle"></h3>
+                <p id="resultDescription"></p>
+                <div class="route-info" id="routeInfo"></div>
+                <button class="reset-btn" onclick="resetFlow()">Opnieuw beginnen</button>
+            </div>
+
+            <!-- Warning box voor niet afgehandelde situaties -->
+            <div id="warningBox" class="warning-box">
+                <h3>⚠️ Let op</h3>
+                <p id="warningText"></p>
+                <button class="reset-btn" onclick="resetFlow()">Opnieuw beginnen</button>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>Meer informatie: <a href="https://www.apgen.nl/over-ons/organisatie/een-veilige-cultuur/" target="_blank">www.apgen.nl/over-ons/organisatie/een-veilige-cultuur/</a></p>
+            <p style="margin-top: 0.5rem; font-size: 0.85rem;">Bij twijfel kunt u altijd contact opnemen met de vertrouwenspersoon</p>
+        </div>
+    </div>
+
+    <script>
+        let userRole = '';
+        let complaintAbout = '';
+        let complaintType = '';
+
+        function selectRole(role) {
+            userRole = role;
+            document.getElementById('step1').classList.add('hidden');
+            document.getElementById('step1').style.display = 'none';
+            document.getElementById('step2').classList.remove('hidden');
+            document.getElementById('step2').style.display = 'block';
+            
+            // Dynamisch opties laden voor stap 2 gebaseerd op de rol
+            const step2Options = document.getElementById('step2Options');
+            step2Options.innerHTML = '';
+
+            if (role === 'medewerker') {
+                // Voor medewerkers: klokkenluidersregeling opties
+                step2Options.innerHTML = `
+                    <button class="option-btn" onclick="selectComplaintAbout('misstand-algemeen')">
+                        <h4>Misstand (algemeen)</h4>
+                        <p>Overtreding AVG, financiële onregelmatigheden, integriteitskwesties</p>
+                    </button>
+                    <button class="option-btn" onclick="selectComplaintAbout('misstand-bestuur')">
+                        <h4>Misstand door bestuur</h4>
+                        <p>De misstand betreft het bestuur of een bestuurslid</p>
+                    </button>
+                    <button class="option-btn" onclick="selectComplaintAbout('verzorger')">
+                        <h4>Verzorger</h4>
+                        <p>Geestelijk verzorger of jeugdverzorger</p>
+                    </button>
+                    <button class="option-btn" onclick="selectComplaintAbout('andere-medewerker')">
+                        <h4>Andere medewerker</h4>
+                        <p>Andere werknemer of vrijwilliger</p>
+                    </button>
+                `;
+            } else {
+                // Voor lidmaten en vertegenwoordigers: klachtenreglement opties
+                step2Options.innerHTML = `
+                    <button class="option-btn" onclick="selectComplaintAbout('verzorger')">
+                        <h4>Verzorger</h4>
+                        <p>Geestelijk verzorger of jeugdverzorger (ongewenst gedrag)</p>
+                    </button>
+                    <button class="option-btn" onclick="selectComplaintAbout('bestuur')">
+                        <h4>Bestuurslid</h4>
+                        <p>Een lid van de Raad van Bestuur</p>
+                    </button>
+                    <button class="option-btn" onclick="selectComplaintAbout('rvt')">
+                        <h4>Raad van Toezicht</h4>
+                        <p>Een lid van de Raad van Toezicht</p>
+                    </button>
+                    <button class="option-btn" onclick="selectComplaintAbout('ander')">
+                        <h4>Andere persoon</h4>
+                        <p>Medewerker, vrijwilliger of andere betrokkene</p>
+                    </button>
+                `;
+            }
+        }
+
+        function selectComplaintAbout(about) {
+            complaintAbout = about;
+            
+            // Sommige situaties hebben geen verdere vragen nodig
+            if (shouldSkipStep3()) {
+                showResult();
+            } else {
+                document.getElementById('step2').classList.add('hidden');
+                document.getElementById('step2').style.display = 'none';
+                document.getElementById('step3').classList.remove('hidden');
+                document.getElementById('step3').style.display = 'block';
+                loadStep3Options();
+            }
+        }
+
+        function shouldSkipStep3() {
+            // Directe routes zonder verdere vragen
+            if (complaintAbout === 'rvt') return true;
+            if (complaintAbout === 'misstand-bestuur') return true;
+            if (userRole === 'medewerker' && complaintAbout === 'misstand-algemeen') return true;
+            return false;
+        }
+
+        function loadStep3Options() {
+            const step3Options = document.getElementById('step3Options');
+            step3Options.innerHTML = '';
+
+            if (complaintAbout === 'verzorger') {
+                step3Options.innerHTML = `
+                    <button class="option-btn" onclick="selectComplaintType('ongewenst-gedrag')">
+                        <h4>Ongewenst gedrag</h4>
+                        <p>Gedrag in strijd met de gedragscode voor verzorgers</p>
+                    </button>
+                    <button class="option-btn" onclick="selectComplaintType('zedendelict')">
+                        <h4>Mogelijk zedendelict</h4>
+                        <p>Ernstige grensoverschrijding of mogelijk strafbaar gedrag</p>
+                    </button>
+                `;
+            } else if (complaintAbout === 'bestuur') {
+                step3Options.innerHTML = `
+                    <button class="option-btn" onclick="selectComplaintType('ongewenst-gedrag-bestuur')">
+                        <h4>Ongewenst gedrag</h4>
+                        <p>Als het bestuurslid ook verzorger is: gedrag in strijd met gedragscode</p>
+                    </button>
+                    <button class="option-btn" onclick="selectComplaintType('algemene-klacht-bestuur')">
+                        <h4>Algemene klacht</h4>
+                        <p>Andere klacht over functioneren bestuurslid</p>
+                    </button>
+                `;
+            } else {
+                step3Options.innerHTML = `
+                    <button class="option-btn" onclick="selectComplaintType('algemeen')">
+                        <h4>Algemene klacht</h4>
+                        <p>Klacht over gedrag of functioneren</p>
+                    </button>
+                `;
+            }
+        }
+
+        function selectComplaintType(type) {
+            complaintType = type;
+            showResult();
+        }
+
+        function showResult() {
+            document.getElementById('step1').classList.add('hidden');
+            document.getElementById('step1').style.display = 'none';
+            document.getElementById('step2').classList.add('hidden');
+            document.getElementById('step2').style.display = 'none';
+            document.getElementById('step3').classList.add('hidden');
+            document.getElementById('step3').style.display = 'none';
+            
+            const result = determineRoute();
+            
+            if (result.warning) {
+                showWarning(result);
+            } else {
+                document.getElementById('resultTitle').textContent = result.title;
+                document.getElementById('resultDescription').textContent = result.description;
+                document.getElementById('routeInfo').innerHTML = result.routeInfo;
+                document.getElementById('result').classList.add('show');
+            }
+        }
+
+        function showWarning(result) {
+            document.getElementById('warningText').innerHTML = result.warningText;
+            document.getElementById('warningBox').classList.add('show');
+        }
+
+        function determineRoute() {
+            // Route 1: RvT klacht - via bestuur
+            if (complaintAbout === 'rvt') {
+                return {
+                    title: '📋 Klacht over Raad van Toezicht',
+                    description: 'Voor klachten over de Raad van Toezicht of een lid daarvan richt u zich tot het bestuur.',
+                    routeInfo: `
+                        <h4>Uw route:</h4>
+                        <p><strong>Contact:</strong> Raad van Bestuur</p>
+                        <p><strong>Procedure:</strong> Algemene klachtenprocedure</p>
+                        
+                        <p style="margin-top: 1rem;"><strong>Werkwijze:</strong></p>
+                        <ul style="margin-left: 1.5rem; margin-top: 0.5rem;">
+                            <li>Dien uw klacht schriftelijk in bij het bestuur</li>
+                            <li>Het bestuur behandelt de klacht en kan indien nodig externe expertise inschakelen</li>
+                            <li>Bij ernstige kwesties kan het bestuur de voorzitter van de RvT informeren (tenzij de klacht hem/haar betreft)</li>
+                            <li>U ontvangt een schriftelijke reactie op uw klacht</li>
+                        </ul>
+                        
+                        <p style="margin-top: 1rem;"><strong>Let op:</strong> Omdat de RvT het toezichthoudend orgaan is, wordt uw klacht met extra zorgvuldigheid behandeld. Het bestuur kan ervoor kiezen een onafhankelijke commissie in te stellen voor complexe situaties.</p>
+                        
+                        <p style="margin-top: 1rem;"><em>Tip: De vertrouwenspersoon kan u adviseren en ondersteunen bij het indienen van uw klacht over de RvT.</em></p>
+                    `
+                };
+            }
+
+            // Route 2: Misstand door bestuur - direct naar RvT
+            if (complaintAbout === 'misstand-bestuur') {
+                return {
+                    title: '📋 Klokkenluidersregeling - Direct naar RvT',
+                    description: 'Bij een misstand die het bestuur betreft, meldt u direct bij de Raad van Toezicht.',
+                    routeInfo: `
+                        <h4>Uw route:</h4>
+                        <p><strong>Regeling:</strong> Klokkenluidersregeling</p>
+                        <p><strong>Contact:</strong> Raad van Toezicht (direct)</p>
+                        <p><strong>Referentie:</strong> Artikel 3, lid 1 klokkenluidersregeling</p>
+                        <p style="margin-top: 1rem;"><strong>Waarom deze route?</strong><br>
+                        Omdat de melding het bestuur zelf betreft, wordt de normale route via het bestuur omzeild en gaat de melding direct naar het toezichthoudend orgaan.</p>
+                        <p style="margin-top: 1rem;"><em>Tip: U kunt ook eerst contact opnemen met de vertrouwenspersoon voor ondersteuning bij het doen van de melding.</em></p>
+                    `
+                };
+            }
+
+            // Route 3: Algemene misstand (medewerker) - via bestuur
+            if (userRole === 'medewerker' && complaintAbout === 'misstand-algemeen') {
+                return {
+                    title: '📋 Klokkenluidersregeling',
+                    description: 'Voor meldingen van misstanden gebruikt u de klokkenluidersregeling.',
+                    routeInfo: `
+                        <h4>Uw route:</h4>
+                        <p><strong>Regeling:</strong> Klokkenluidersregeling</p>
+                        <p><strong>Contact:</strong> Bestuur of vertrouwenspersoon</p>
+                        <p style="margin-top: 1rem;"><strong>Wat valt hieronder?</strong></p>
+                        <ul style="margin-left: 1.5rem; margin-top: 0.5rem;">
+                            <li>Overtredingen van de AVG</li>
+                            <li>Financiële onregelmatigheden</li>
+                            <li>Integriteitskwesties</li>
+                            <li>Gevaar voor volksgezondheid</li>
+                        </ul>
+                        <p style="margin-top: 1rem;"><strong>Voor wie?</strong><br>
+                        Iedereen die - bezoldigd of onbezoldigd - werkzaamheden verricht voor het Apostolisch Genootschap (werknemer, ZZP-er, voorganger, financieel administrateur, jeugdverzorger, begeleider).</p>
+                        <p style="margin-top: 1rem;"><em>Tip: De vertrouwenspersoon kan u adviseren en ondersteunen bij het doen van de melding.</em></p>
+                    `
+                };
+            }
+
+            // Route 4: Verzorger - ongewenst gedrag (klachtenreglement)
+            if (complaintAbout === 'verzorger' && (complaintType === 'ongewenst-gedrag' || complaintType === 'zedendelict')) {
+                const isZedendelict = complaintType === 'zedendelict';
+                return {
+                    title: '📜 Klachtenreglement voor verzorgers',
+                    description: 'Voor ongewenst gedrag van verzorgers volgt u de klachtenprocedure zoals beschreven in het klachtenreglement.',
+                    routeInfo: `
+                        <h4>Uw route:</h4>
+                        <p><strong>Regeling:</strong> Klachtenreglement (gedragscode verzorgers)</p>
+                        <p><strong>Stap 1:</strong> Indienen klacht bij bestuurslid via Adviescommissie Klachten</p>
+                        <p><strong>Contact:</strong> adviescommissie@apgen.nl of Postbus 116, 3740 AC Baarn</p>
+                        <p><strong>Stap 2 (optioneel):</strong> Bij onvrede met besluit → Toetsingscommissie (binnen 6 weken)</p>
+                        ${isZedendelict ? `
+                        <p style="margin-top: 1rem; padding: 1rem; background: rgba(255,255,255,0.2); border-radius: 6px;">
+                            <strong>⚠️ Belangrijk bij mogelijk zedendelict:</strong><br>
+                            - Overweeg aangifte bij de politie<br>
+                            - De behandeling kan worden opgeschort tijdens strafrechtelijk onderzoek<br>
+                            - Het bestuurslid kan de verzorger schorsen tijdens de procedure
+                        </p>
+                        ` : ''}
+                        <p style="margin-top: 1rem;"><strong>Termijnen:</strong></p>
+                        <ul style="margin-left: 1.5rem; margin-top: 0.5rem;">
+                            <li>Indienen klacht: binnen 1 jaar na voorval (geen termijn bij zedendelict)</li>
+                            <li>Horen door bestuurslid: binnen 2 maanden</li>
+                            <li>Schriftelijk besluit: binnen 1 maand na laatste gesprek</li>
+                        </ul>
+                        <p style="margin-top: 1rem;"><em>Tip: U mag een persoonlijk adviseur meenemen tijdens de procedure. De vertrouwenspersoon kan u ook ondersteunen.</em></p>
+                    `
+                };
+            }
+
+            // Route 5: Bestuurslid - ongewenst gedrag als verzorger
+            if (complaintAbout === 'bestuur' && complaintType === 'ongewenst-gedrag-bestuur') {
+                return {
+                    title: '📜 Klachtenreglement (bestuurslid als verzorger)',
+                    description: 'Als het bestuurslid ook verzorger is en het gaat om ongewenst gedrag, volgt u de normale klachtenprocedure.',
+                    routeInfo: `
+                        <h4>Uw route:</h4>
+                        <p><strong>Regeling:</strong> Klachtenreglement (artikel 1.3 lid 8)</p>
+                        <p><strong>Contact:</strong> adviescommissie@apgen.nl of Postbus 116, 3740 AC Baarn</p>
+                        <p style="margin-top: 1rem;"><strong>Bijzonderheden:</strong><br>
+                        Het klachtenreglement is volledig van toepassing, behalve:<br>
+                        - Het horen vindt plaats onder leiding van een lid van de Adviescommissie (niet het bestuurslid zelf)<br>
+                        - Artikel 2.8 (schorsing) is niet van toepassing</p>
+                        <p style="margin-top: 1rem;"><strong>Procedure:</strong></p>
+                        <ul style="margin-left: 1.5rem; margin-top: 0.5rem;">
+                            <li>Klacht indienen bij Adviescommissie</li>
+                            <li>Horen door Adviescommissielid</li>
+                            <li>Schriftelijk besluit van het bestuur</li>
+                            <li>Mogelijk verzoek tot toetsing bij Toetsingscommissie</li>
+                        </ul>
+                        <p style="margin-top: 1rem;"><em>Tip: Neem contact op met de vertrouwenspersoon voor begeleiding in deze complexe situatie.</em></p>
+                    `
+                };
+            }
+
+            // Route 6: Bestuurslid - algemene klacht (niet als verzorger)
+            if (complaintAbout === 'bestuur' && complaintType === 'algemene-klacht-bestuur') {
+                return {
+                    title: '📋 Algemene klacht over bestuurslid',
+                    description: 'Voor algemene klachten over een bestuurslid (niet gerelateerd aan de gedragscode voor verzorgers) richt u zich tot de Raad van Toezicht.',
+                    routeInfo: `
+                        <h4>Uw route:</h4>
+                        <p><strong>Contact:</strong> Raad van Toezicht (toezichthoudend orgaan)</p>
+                        <p><strong>Procedure:</strong> Algemene klachtenprocedure</p>
+                        
+                        <p style="margin-top: 1rem;"><strong>Werkwijze:</strong></p>
+                        <ul style="margin-left: 1.5rem; margin-top: 0.5rem;">
+                            <li>Dien uw klacht schriftelijk in bij de voorzitter van de Raad van Toezicht</li>
+                            <li>De RvT beoordeelt de klacht in haar toezichthoudende rol</li>
+                            <li>De RvT kan het bestuurslid om een reactie vragen</li>
+                            <li>U ontvangt een schriftelijke reactie op uw klacht</li>
+                            <li>Bij ernstige kwesties kan de RvT maatregelen treffen binnen haar bevoegdheden</li>
+                        </ul>
+                        
+                        <p style="margin-top: 1rem;"><strong>Voorbeelden van algemene klachten:</strong></p>
+                        <ul style="margin-left: 1.5rem; margin-top: 0.5rem;">
+                            <li>Klachten over besluitvorming of beleid</li>
+                            <li>Klachten over communicatie of bejegening</li>
+                            <li>Klachten over uitvoering van bestuurstaken</li>
+                        </ul>
+                        
+                        <p style="margin-top: 1rem;"><em>Tip: Voor begeleiding bij het formuleren van uw klacht kunt u contact opnemen met de vertrouwenspersoon.</em></p>
+                    `
+                };
+            }
+
+            // Route 7: Medewerker over verzorger - kan beide procedures zijn
+            if (userRole === 'medewerker' && complaintAbout === 'verzorger') {
+                return {
+                    title: '🔀 Beide procedures mogelijk',
+                    description: 'Als medewerker kunt u kiezen tussen het klachtenreglement (voor ongewenst gedrag van verzorgers) of de klokkenluidersregeling (voor misstanden).',
+                    routeInfo: `
+                        <h4>Optie 1: Klachtenreglement</h4>
+                        <p><strong>Wanneer:</strong> Bij ongewenst gedrag volgens gedragscode verzorgers</p>
+                        <p><strong>Voorwaarde:</strong> U moet wel als klachtgerechtigd worden beschouwd (lidmaat, voormalig lidmaat, of wettelijk vertegenwoordiger daarvan)</p>
+                        <p><strong>Contact:</strong> adviescommissie@apgen.nl</p>
+                        
+                        <h4 style="margin-top: 1.5rem;">Optie 2: Klokkenluidersregeling</h4>
+                        <p><strong>Wanneer:</strong> Bij een misstand in bredere zin</p>
+                        <p><strong>Voor:</strong> Alle medewerkers (bezoldigd en onbezoldigd)</p>
+                        <p><strong>Contact:</strong> Bestuur of vertrouwenspersoon</p>
+                        
+                        <p style="margin-top: 1.5rem;"><em><strong>Advies:</strong> Neem contact op met de vertrouwenspersoon om te bepalen welke route het beste bij uw situatie past.</em></p>
+                    `
+                };
+            }
+
+            // Route 8: Andere medewerker
+            if (complaintAbout === 'andere-medewerker') {
+                return {
+                    title: '📋 Klacht over andere medewerker',
+                    description: 'Voor klachten over andere medewerkers hangt de juiste route af van de aard van uw klacht.',
+                    routeInfo: `
+                        <h4>Route A: Bij een misstand → Klokkenluidersregeling</h4>
+                        <p><strong>Contact:</strong> Bestuur of vertrouwenspersoon</p>
+                        <p><strong>Wanneer:</strong> Bij objectieve misstanden zoals:</p>
+                        <ul style="margin-left: 1.5rem; margin-top: 0.5rem;">
+                            <li>AVG-overtredingen</li>
+                            <li>Financiële onregelmatigheden</li>
+                            <li>Integriteitskwesties</li>
+                            <li>Gevaar voor volksgezondheid</li>
+                            <li>Schending van regelgeving</li>
+                        </ul>
+                        
+                        <h4 style="margin-top: 1.5rem;">Route B: Bij andere klachten → Via leidinggevende of bestuur</h4>
+                        <p><strong>Contact:</strong> Uw directe leidinggevende of bestuur</p>
+                        <p><strong>Wanneer:</strong> Bij andere werkgerelateerde kwesties zoals:</p>
+                        <ul style="margin-left: 1.5rem; margin-top: 0.5rem;">
+                            <li>Persoonlijke conflicten</li>
+                            <li>Klachten over werkwijze of samenwerking</li>
+                            <li>Communicatieproblemen</li>
+                            <li>Klachten over bejegening (niet strafbaar)</li>
+                        </ul>
+                        
+                        <p style="margin-top: 1rem;"><strong>Werkwijze Route B:</strong></p>
+                        <ul style="margin-left: 1.5rem; margin-top: 0.5rem;">
+                            <li>Bespreek eerst intern met uw leidinggevende (indien mogelijk)</li>
+                            <li>Indien geen oplossing: schriftelijke klacht bij bestuur</li>
+                            <li>Het bestuur beoordeelt en onderneemt passende actie</li>
+                            <li>U ontvangt een schriftelijke reactie</li>
+                        </ul>
+                        
+                        <p style="margin-top: 1rem;"><em><strong>Advies:</strong> Niet zeker welke route? Start met de vertrouwenspersoon. Deze kan u helpen de juiste aanpak te bepalen en u ondersteunen in het proces.</em></p>
+                    `
+                };
+            }
+
+            // Route 9: Andere persoon (niet verzorger, niet bestuur, niet RvT)
+            if (complaintAbout === 'ander') {
+                return {
+                    title: '📋 Klacht over andere persoon',
+                    description: 'Voor klachten over andere personen (medewerkers, vrijwilligers) gebruikt u de algemene klachtenprocedure.',
+                    routeInfo: `
+                        <h4>Uw route:</h4>
+                        <p><strong>Stap 1:</strong> Bepaal de ernst en context van uw klacht</p>
+                        
+                        <p style="margin-top: 1rem;"><strong>Voor organisatorische klachten:</strong></p>
+                        <ul style="margin-left: 1.5rem; margin-top: 0.5rem;">
+                            <li><strong>Contact:</strong> Bestuur van het Apostolisch Genootschap</li>
+                            <li><strong>Wanneer:</strong> Klachten over medewerkers, vrijwilligers, of organisatorische zaken</li>
+                            <li><strong>Procedure:</strong> Schriftelijke klacht indienen, het bestuur beoordeelt en reageert</li>
+                        </ul>
+                        
+                        <p style="margin-top: 1rem;"><strong>Voor lokale kwesties:</strong></p>
+                        <ul style="margin-left: 1.5rem; margin-top: 0.5rem;">
+                            <li><strong>Contact:</strong> Uw lokale gemeente of gemeentebestuur</li>
+                            <li><strong>Wanneer:</strong> Klachten over lokale activiteiten, vrijwilligers, of onderlinge verhoudingen</li>
+                            <li><strong>Procedure:</strong> Bespreek eerst met betrokkene(n) of gemeenteleiding</li>
+                        </ul>
+                        
+                        <p style="margin-top: 1rem;"><strong>Bij ernstige incidenten:</strong></p>
+                        <ul style="margin-left: 1.5rem; margin-top: 0.5rem;">
+                            <li>Bij (vermoedens van) strafbare feiten: overweeg aangifte bij de politie</li>
+                            <li>Bij onveilige situaties: direct contact met bestuur en/of vertrouwenspersoon</li>
+                            <li>Bij twijfel over de aanpak: start met de vertrouwenspersoon</li>
+                        </ul>
+                        
+                        <p style="margin-top: 1rem;"><em><strong>Advies:</strong> De vertrouwenspersoon kan u helpen bepalen welke route het beste bij uw specifieke situatie past en kan u ondersteunen in het proces.</em></p>
+                    `
+                };
+            }
+
+            // Fallback
+            return {
+                warning: true,
+                warningText: `<p>Op basis van uw antwoorden kunnen we geen eenduidige route bepalen.</p>
+                <p style="margin-top: 1rem;"><strong>Aanbeveling:</strong> Neem contact op met de vertrouwenspersoon voor persoonlijk advies over de beste manier om uw melding te doen.</p>`
+            };
+        }
+
+        function resetFlow() {
+            userRole = '';
+            complaintAbout = '';
+            complaintType = '';
+            
+            // Verberg result en warning boxes
+            document.getElementById('result').classList.remove('show');
+            document.getElementById('warningBox').classList.remove('show');
+            
+            // Reset alle stappen
+            document.getElementById('step1').classList.remove('hidden');
+            document.getElementById('step1').style.display = 'block';
+            document.getElementById('step2').classList.add('hidden');
+            document.getElementById('step2').style.display = 'none';
+            document.getElementById('step3').classList.add('hidden');
+            document.getElementById('step3').style.display = 'none';
+            
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function goBack(currentStep) {
+            if (currentStep === 2) {
+                // Terug naar stap 1
+                userRole = '';
+                complaintAbout = '';
+                document.getElementById('step2').classList.add('hidden');
+                document.getElementById('step2').style.display = 'none';
+                document.getElementById('step1').classList.remove('hidden');
+                document.getElementById('step1').style.display = 'block';
+            } else if (currentStep === 3) {
+                // Terug naar stap 2
+                complaintType = '';
+                document.getElementById('step3').classList.add('hidden');
+                document.getElementById('step3').style.display = 'none';
+                document.getElementById('step2').classList.remove('hidden');
+                document.getElementById('step2').style.display = 'block';
+            }
+            
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
